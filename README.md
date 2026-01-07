@@ -23,7 +23,7 @@ A local LLM-powered pre-commit code reviewer that analyzes your staged changes a
 
 ```bash
 # Clone the repository
-git clone <repo-url> git-gandalf
+git clone https://github.com/swarajspatil158/git-gandalf.git
 cd git-gandalf
 ```
 
@@ -37,34 +37,30 @@ cd git-gandalf
 
 For each repository you want to protect:
 
+First, get the path to your git-gandalf installation:
+
 ```bash
-# Navigate to your project
-cd /path/to/your/project
-
-# Copy the hook to your project's hooks directory
-cp /path/to/git-gandalf/hooks/pre-commit .git/hooks/pre-commit
-
-# Make it executable
-chmod +x .git/hooks/pre-commit
-
-# Edit the hook to point to git-gandalf location
-# Update GANDALF_DIR in .git/hooks/pre-commit
+cd /path/to/git-gandalf
+pwd
+# Example: /home/swaraj/git-gandalf
 ```
 
-Or create the hook manually:
+Then, in your target repository, create the pre-commit hook with that path:
 
 ```bash
+cd /path/to/your/project
+chmod +x .git/hooks/pre-commit
+
 cat > .git/hooks/pre-commit << 'EOF'
 #!/bin/sh
-GANDALF_DIR="/path/to/git-gandalf"
+
+GANDALF_DIR="/replace/this/with/your/git-gandalf/repo/path/here"
+
 DIFF=$(git diff --cached --unified=3)
-if [ -z "$DIFF" ]; then
-  exit 0
-fi
+[ -z "$DIFF" ] && exit 0
+
 echo "$DIFF" | node "$GANDALF_DIR/index.js"
 EOF
-
-chmod +x .git/hooks/pre-commit
 ```
 
 ## Usage
