@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# TICKET 2: Raw Git Hook Wiring
+#
+# Git Gandalf pre-commit hook
+# Shell file stays <20 lines forever
+#
+# Responsibilities:
+# - Extract staged diff
+# - Pipe diff to Node script
+# - Respect exit code
+
+# Get the directory where this hook lives
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+GANDALF_DIR="$(dirname "$HOOK_DIR")"
+
+# Get staged diff (only staged changes, not working directory)
+DIFF=$(git diff --cached --unified=3)
+
+# If no diff, allow commit
+if [ -z "$DIFF" ]; then
+  exit 0
+fi
+
+# Pipe diff to Node and respect exit code
+echo "$DIFF" | node "$GANDALF_DIR/index.js"
