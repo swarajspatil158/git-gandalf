@@ -48,8 +48,8 @@ export async function runLLM(prompt, timeout = DEFAULT_TIMEOUT) {
           }
         ],
         temperature: 0.1,
-        max_tokens: 2048,
-        response_format: { type: 'json_object' }
+        max_tokens: -1,
+        stream: false
       }),
       signal: controller.signal
     });
